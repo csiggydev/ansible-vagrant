@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'playbooks/**'
+      - 'ansible/playbooks/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'playbooks/**'
+      - 'ansible/playbooks/**'
 
 jobs:
   # Job #1
