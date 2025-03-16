@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - 'ansible/playbooks/**'
+  workflow_dispatch: # manual trigger
 
 jobs:
   # Job #1
