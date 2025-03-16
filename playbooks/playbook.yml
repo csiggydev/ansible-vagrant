@@ -5,11 +5,11 @@
   gather_facts: false
 
   tasks:
-    - name: "Play 1: Host Connection test"
+    - name: "Play 1: Basic Ping Test"
       ansible.builtin.ping:
       register: connection_output
 
-    - name: "Play 2: Print Connection Output"
+    - name: "Play 2: Print Test Output"
       ansible.builtin.debug:
         msg: "{{ connection_output }}"
       failed_when: connection_output.failed is true
