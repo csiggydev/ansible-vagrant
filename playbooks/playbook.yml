@@ -1,6 +1,6 @@
 ---
 - name: "PLAYBOOK: Vagrant Ubuntu Test"
-  hosts: vagrant-ubuntu
+  hosts: all
   become: true
   gather_facts: false
 
