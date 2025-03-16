@@ -1,5 +1,9 @@
 ## Ansible Playground
 
+### Build Status
+
+[![Ansible CI Workflow](https://github.com/csiggydev/ansible-vagrant/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/csiggydev/ansible-vagrant/actions/workflows/ci.yml)
+
 ### Overview
 
 Test ansible playbooks against VMs instantiated via Vagrant and Virtualbox
