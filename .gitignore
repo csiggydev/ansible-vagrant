@@ -1,0 +1,8 @@
+# GIT Ignore
+
+# hidden dir
+vagrant_files/
+.ansible
+.logs
+.vagrant
+.vscode
