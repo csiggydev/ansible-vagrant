@@ -1,4 +1,4 @@
-name: Ansible Docker Workflow
+name: Ansible Ubuntu Workflow - Test
 
 on:
   push:
