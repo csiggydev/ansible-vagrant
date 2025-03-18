@@ -58,12 +58,12 @@ jobs:
       # Build image
       - name: Docker Build
         run: |
-          sudo docker build --build-arg CACHEBUST=$(date +%s) -t docker-ubuntu-test .
+          sudo docker build --build-arg CACHEBUST=$(date +%s) -t docker-ubuntu-test-img .
 
       # Run container
       - name: Docker Run
         run: |
-          sudo docker run -d --name docker-ubuntu-test-container -p 22:22 docker-ubuntu-test
+          sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-img
           sudo docker ps -a  # List containers to ensure it's running
 
       # Check SSH connection
@@ -71,7 +71,7 @@ jobs:
         run: |
           # Wait
           sleep 5
-          sshpass -p "root" ssh -o StrictHostKeyChecking=no root@localhost -p 22 "echo SSH connected"
+          sshpass -p "root" ssh -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
 
       # Clean up job
       - name: Cleanup Docker container
