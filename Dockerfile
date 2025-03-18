@@ -1,9 +1,8 @@
 # Jammy Image
 FROM ubuntu:22.04
 
-# Inject JHA NetSkope Signed Certificates
-COPY /certificates/* /usr/local/share/ca-certificates/
-COPY /certificates/* /etc/ssl/certs/
+# COPY /certificates/* /usr/local/share/ca-certificates/
+# COPY /certificates/* /etc/ssl/certs/
 
 # Bootstrap binaries (sudo unnecessary)
 RUN apt update
