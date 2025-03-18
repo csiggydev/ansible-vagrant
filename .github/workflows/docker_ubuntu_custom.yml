@@ -21,29 +21,60 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Install dependencies
       - name: Install Dependencies
-        id: dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install ca-certificates curl -y
-          sudo install -m 0755 -d /etc/apt/keyrings
-          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-          sudo chmod a+r /etc/apt/keyrings/docker.asc  
-          # Add the repository to Apt sources:
+          sudo apt-get install ca-certificates curl gnupg lsb-release -y
+
+      # Add Docker GPG key
+      - name: Add Docker repository
+        run: |
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.asc
           echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-            $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+            "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
           sudo apt-get update -y
+
+      # Install Docker
       - name: Install Docker
-        id: docker
         run: |
           sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+      # Cache Docker layers (build quicker)
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      # Build image
       - name: Docker Build
-        id: docker-build
         run: |
-          sudo docker build -t docker-ubuntu-test .
+          sudo docker build --build-arg CACHEBUST=$(date +%s) -t docker-ubuntu-test .
+
+      # Run container
       - name: Docker Run
-        id: docker-run
         run: |
-          sudo docker run -t -d docker-ubuntu-test
+          sudo docker run -d --name docker-ubuntu-test-container -p 22:22 docker-ubuntu-test
+          sudo docker ps -a  # List containers to ensure it's running
+
+      # Check SSH connection
+      - name: Test SSH connection to container
+        run: |
+          # Wait
+          sleep 5
+          sshpass -p "root" ssh -o StrictHostKeyChecking=no root@localhost -p 22 "echo SSH connected"
+
+      # Clean up job
+      - name: Cleanup Docker container
+        run: |
+          sudo docker stop docker-ubuntu-test-container
+          sudo docker rm docker-ubuntu-test-container
