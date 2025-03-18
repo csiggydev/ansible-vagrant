@@ -42,7 +42,7 @@ jobs:
       - name: Docker Build
         id: docker-build
         run: |
-          sudo docker build -t docker-ubuntu-test ../../
+          sudo docker build -t docker-ubuntu-test .
       - name: Docker Run
         id: docker-run
         run: |
