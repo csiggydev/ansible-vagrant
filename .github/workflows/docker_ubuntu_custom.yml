@@ -63,7 +63,7 @@ jobs:
       # Run container
       - name: Docker Run
         run: |
-          sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-img
+          sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-test-img
           sudo docker ps -a  # List containers to ensure it's running
 
       # Check SSH connection
