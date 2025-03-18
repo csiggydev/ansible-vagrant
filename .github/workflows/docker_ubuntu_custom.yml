@@ -20,6 +20,7 @@ jobs:
       ANSIBLE_FORCE_COLOR: '1'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Install Dependencies
         id: dependencies
         run: |
