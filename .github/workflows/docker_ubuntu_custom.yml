@@ -14,7 +14,7 @@ on:
   workflow_dispatch: # manual trigger
 
 jobs:
-  docker-install:
+  docker-build-test:
     env:
       PY_COLORS: '1'
       ANSIBLE_FORCE_COLOR: '1'
@@ -64,7 +64,7 @@ jobs:
       - name: Docker Run
         run: |
           sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-test-img
-          sudo docker ps -a  # List containers to ensure it's running
+          sudo docker ps -a
 
       # Check SSH connection
       - name: Test SSH connection to container

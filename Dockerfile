@@ -9,9 +9,13 @@ RUN apt-get update && \
         python3 \
         curl \
         telnet \
+        vim \
         openssh-server && \
     update-ca-certificates && \
     rm -rf /var/lib/apt/lists/*
+
+RUN sed -i 's/#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/' /etc/ssh/sshd_config \
+    && sed -i 's/#Port 22/Port 22/' /etc/ssh/sshd_config
 
 # SSH
 EXPOSE 22
