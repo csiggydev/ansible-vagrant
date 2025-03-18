@@ -1,0 +1,46 @@
+name: Ansible Docker Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ansible/playbooks/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'ansible/playbooks/**'
+  workflow_dispatch: # manual trigger
+
+jobs:
+  docker-install:
+    env:
+      PY_COLORS: '1'
+      ANSIBLE_FORCE_COLOR: '1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        id: dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install ca-certificates curl -y
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc  
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update -y
+      - name: Install Docker
+        id: docker
+        run: |
+          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+        # 2
+      - name: Run Docker
+        id: docker-run
+        run: |
+          sudo docker run hello-world
