@@ -22,38 +22,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Set up Docker Buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # # Set up Docker Buildx
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
 
-      # Install dependencies
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install ca-certificates curl gnupg lsb-release -y
+      # # Install dependencies
+      # - name: Install Dependencies
+      #   run: |
+      #     sudo apt-get update -y
+      #     sudo apt-get install ca-certificates curl gnupg lsb-release -y
 
-      # Add Docker GPG key
-      - name: Add Docker repository
-        run: |
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.asc
-          echo \
-            "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
-            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update -y
+      # # Add Docker GPG key
+      # - name: Add Docker repository
+      #   run: |
+      #     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.asc
+      #     echo \
+      #       "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+      #       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      #     sudo apt-get update -y
 
-      # Install Docker
-      - name: Install Docker
-        run: |
-          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+      # # Install Docker
+      # - name: Install Docker
+      #   run: |
+      #     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-      # Cache Docker layers (build quicker)
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      # # Cache Docker layers (build quicker)
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
 
       - name: Inject SSH key
         run: |
@@ -61,27 +61,31 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      # Build image
-      - name: Docker Build
+      - name: Debug Key
         run: |
-          sudo docker build --build-arg SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" -t docker-ubuntu-test-img .
+          echo "SSH_PASSWORD is set: ${{ secrets.SSH_PRIVATE_KEY != '' }}"
 
-      # Run container
-      - name: Docker Run
-        run: |
-          sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-test-img
+      # # Build image
+      # - name: Docker Build
+      #   run: |
+      #     sudo docker build --build-arg SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" -t docker-ubuntu-test-img .
 
-      # Check SSH connection
-      - name: Test SSH connection
-        run: |
-          ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
-          sleep 3
-          whoami && pwd
+      # # Run container
+      # - name: Docker Run
+      #   run: |
+      #     sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-test-img
 
-      # Future Ansible Playbook
+      # # Check SSH connection
+      # - name: Test SSH connection
+      #   run: |
+      #     ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
+      #     sleep 3
+      #     whoami && pwd
 
-      # Clean up job
-      - name: Cleanup Docker container
-        run: |
-          sudo docker stop docker-ubuntu-test-container
-          sudo docker rm docker-ubuntu-test-container
+      # # Future Ansible Playbook
+
+      # # Clean up job
+      # - name: Cleanup Docker container
+      #   run: |
+      #     sudo docker stop docker-ubuntu-test-container
+      #     sudo docker rm docker-ubuntu-test-container
