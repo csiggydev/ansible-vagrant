@@ -64,7 +64,7 @@ jobs:
       # Build image
       - name: Docker Build
         run: |
-          docker buildx build --build-arg SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" \
+          docker build --build-arg SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" \
                        --build-arg SSH_PUBLIC_KEY="${{ secrets.SSH_PUBLIC_KEY }}" \
                        -t docker-ubuntu-test-img .
 
