@@ -73,7 +73,7 @@ jobs:
       # Check SSH connection
       - name: Test SSH connection
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
+          sshpass -p "${{ secrets.SSH_PRIVATE_KEY }}" ssh -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
           sleep 3
           whoami && pwd
 
