@@ -14,13 +14,16 @@ RUN apt-get update && \
     update-ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Accept SSH arg
+# Accept SSH args
 ARG SSH_PRIVATE_KEY
+ARG SSH_PUBLIC_KEY
 
 # Set up SSH key for root user (for key-based authentication)
 RUN mkdir -p /root/.ssh && \
     echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa && \
     chmod 600 /root/.ssh/id_rsa && \
+    echo "$SSH_PUBLIC_KEY" > /root/.ssh/authorized_keys && \
+    chmod 600 /root/.ssh/authorized_keys && \
     touch /root/.ssh/known_hosts && \
     ssh-keyscan -H github.com >> /root/.ssh/known_hosts
 
