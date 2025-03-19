@@ -54,24 +54,30 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+      - name: Inject SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       # Build image
       - name: Docker Build
         run: |
-          sudo docker build --build-arg CACHEBUST=$(date +%s) -t docker-ubuntu-test-img .
+          sudo docker build --build-arg CACHEBUST=$(date +%s) SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" -t docker-ubuntu-test-img .
 
       # Run container
       - name: Docker Run
         run: |
           sudo docker run -d --name docker-ubuntu-test-container -p 2222:22 docker-ubuntu-test-img
-          sudo docker ps -a
 
       # Check SSH connection
-      - name: Test SSH connection to container
+      - name: Test SSH connection
         run: |
-          # Wait
-          sleep 5
-          sshpass -p "root" ssh -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@localhost -p 2222 "echo SSH connected"
+          sleep 3
+          whoami && pwd
+
+      # Future Ansible Playbook
 
       # Clean up job
       - name: Cleanup Docker container
