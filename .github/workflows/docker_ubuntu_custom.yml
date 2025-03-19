@@ -63,7 +63,7 @@ jobs:
       # Build image
       - name: Docker Build
         run: |
-          sudo docker build --build-arg CACHEBUST=$(date +%s) SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" -t docker-ubuntu-test-img .
+          sudo docker build --build-arg SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}" -t docker-ubuntu-test-img .
 
       # Run container
       - name: Docker Run
