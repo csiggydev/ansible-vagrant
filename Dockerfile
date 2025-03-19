@@ -16,7 +16,8 @@ RUN apt-get update && \
 
 RUN sed -i 's/#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/' /etc/ssh/sshd_config \
     && sed -i 's/#Port 22/Port 22/' /etc/ssh/sshd_config \
-    && sed -i 'PasswordAuthentication yes' /etc/ssh/sshd_config
+    && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # SSH
 EXPOSE 22
