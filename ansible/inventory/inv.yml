@@ -1,7 +1,10 @@
 ---
 all:
   hosts:
-    vagrant-ubuntu:
+    vagrant-app1:
       ansible_host: 192.168.100.10
+      ansible_python_interpreter: /usr/bin/python3
+    vagrant-app2:
+      ansible_host: 192.168.100.11
       ansible_python_interpreter: /usr/bin/python3
 ...

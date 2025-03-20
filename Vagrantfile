@@ -16,6 +16,13 @@ Vagrant.configure("2") do |config|
     app.vm.network :private_network, ip: "192.168.100.10"
   end
 
+  # Test Server #2
+  config.vm.define "app2" do |app|
+    app.vm.hostname = "app2.test"
+    app.vm.network :private_network, ip: "192.168.100.11"
+  end
+  
+
   Execute basic test playbook
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible/playbooks/playbook.yml"
