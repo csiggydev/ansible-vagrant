@@ -34,5 +34,4 @@ jobs:
     steps:
       - name: Workflow Job Summary
         run: |
-          echo "### Ansible Lint Results" >> $GITHUB_STEP_SUMMARY
           echo "$(cat ${{ needs.lint.outputs.lint_output }})" >> $GITHUB_STEP_SUMMARY
