@@ -26,9 +26,14 @@ jobs:
         id: set_output
         run: |
           lint_output=$(ansible-lint ./ansible || true)
-          echo "$lint_output" > lint_output.txt
 
-          echo "lint_output_file=lint_output.txt" >> "$GITHUB_OUTPUT"
+          echo "lint output: $lint_output"
+
+          OUTPUT_FILE="lint_output.txt"
+          echo "### Ansible Lint Results" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
+          echo "$lint_output" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
+          
+          echo "lint_output_file=$OUTPUT_FILE" >> "$GITHUB_OUTPUT"
         continue-on-error: true
 
   job-summary:
@@ -37,4 +42,5 @@ jobs:
     steps:
       - name: Workflow Job Summary
         run: |
+          echo "## Ansible Lint Result" >> $GITHUB_STEP_SUMMARY
           cat ${{ needs.lint.outputs.lint_output_file }} >> $GITHUB_STEP_SUMMARY
