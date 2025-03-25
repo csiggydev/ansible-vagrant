@@ -25,21 +25,10 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible || true)  # Handle exit code 2
+          lint_output=$(ansible-lint ./ansible || true)
+          echo "$lint_output" > lint_output.txt
 
-          lint_output_filtered=$(echo "$lint_output" | grep -v "No new line character" | grep -v "Error:")
-
-          echo "Filtered lint output: $lint_output_filtered"
-
-          if [ -z "$lint_output_filtered" ]; then
-            echo "No lint violations found"
-          fi
-
-          OUTPUT_FILE="lint_output.txt"
-          echo "### Ansible Lint Results" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
-          echo "$lint_output_filtered" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
-          
-          echo "lint_output_file=$OUTPUT_FILE" >> "$GITHUB_OUTPUT"
+          echo "lint_output_file=lint_output.txt" >> "$GITHUB_OUTPUT"
         continue-on-error: true
 
   job-summary:
