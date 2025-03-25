@@ -25,12 +25,22 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible 2>&1)
+          lint_output=$(ansible-lint ./ansible --force-color || true)  # Handle exit code 2
           
+          echo "Raw lint output: $lint_output"
+
           lint_output_filtered=$(echo "$lint_output" | grep -v "No new line character" | grep -v "Error:")
 
-          echo "Lint output: $lint_output_filtered"  # This will be printed in the logs for you to see
+          echo "Filtered lint output: $lint_output_filtered"
 
+          if [ -z "$lint_output_filtered" ]; then
+            echo "No lint violations found"
+          fi
+
+          OUTPUT_FILE="lint_output.txt"
+          echo "### Ansible Lint Results" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
+          echo "$lint_output_filtered" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
+          
           echo "lint_result=$lint_output_filtered" >> "$GITHUB_OUTPUT"
         continue-on-error: true
 
@@ -38,6 +48,10 @@ jobs:
     needs: lint
     runs-on: ubuntu-24.04
     steps:
+      - name: Test output of OUTPUT_FILE since GITHUB_STEP_SUMMARY was printing empty
+        run: |
+          cat lint_output.txt
+
       - name: Workflow Job Summary
         run: |
           echo "### Ansible Lint Results" >> $GITHUB_STEP_SUMMARY
