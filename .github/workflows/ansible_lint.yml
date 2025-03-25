@@ -25,13 +25,14 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_result=$(ansible-lint ./ansible || true)
-          echo "$lint_result" >> "$GITHUB_OUTPUT"
+          lint_output=$(ansible-lint ./ansible 2>&1)
+          
+          lint_output_filtered=$(echo "$lint_output" | grep -v "No new line character" | grep -v "Error:")
 
-          echo "Output: $lint_result"
+          echo "Lint output: $lint_output_filtered"  # This will be printed in the logs for you to see
+
+          echo "lint_result=$lint_output_filtered" >> "$GITHUB_OUTPUT"
         continue-on-error: true
-    # outputs:
-    #   lint_result: "${{ steps.set_output.outputs.lint_output }}"
 
   job-summary:
     needs: lint
