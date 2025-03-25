@@ -28,7 +28,7 @@ jobs:
           echo "$lint_output" >> "$GITHUB_OUTPUT"
         continue-on-error: true
     outputs:
-      lint_result: ${{ steps.set_output.outputs.lint_output }}
+      lint_result: "${{ steps.set_output.outputs.lint_output }}"
 
   job-summary:
     needs: lint
@@ -36,4 +36,4 @@ jobs:
     steps:
       - name: Workflow Job Summary
         run: |
-          echo ${{ needs.lint.outputs.lint_result }} >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.lint.outputs.lint_result }}" >> $GITHUB_STEP_SUMMARY
