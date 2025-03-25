@@ -25,7 +25,7 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible || true)
+          lint_output=$(ansible-lint ./ansible || true)  # Handle exit code 2
 
           lint_output_filtered=$(echo "$lint_output" | grep -v "No new line character" | grep -v "Error:")
 
@@ -39,24 +39,14 @@ jobs:
           echo "### Ansible Lint Results" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
           echo "$lint_output_filtered" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
           
-          lint_output_encoded=$(echo "$lint_output_filtered" | base64)
-          
-          echo "lint_result=$lint_output_encoded" >> "$GITHUB_OUTPUT"
+          echo "lint_output_file=$OUTPUT_FILE" >> "$GITHUB_OUTPUT"
         continue-on-error: true
 
   job-summary:
     needs: lint
     runs-on: ubuntu-24.04
     steps:
-      - name: Decode lint_result output
-        run: |
-          # Decode the base64 output
-          decoded_lint_result=$(echo "${{ needs.lint.outputs.lint_result }}" | base64 --decode)
-          
-          # Show the decoded result to verify the lint results
-          echo "$decoded_lint_result"
-
       - name: Workflow Job Summary
         run: |
           echo "### Ansible Lint Results" >> $GITHUB_STEP_SUMMARY
-          echo "${{ needs.lint.outputs.lint_result }}" | base64 --decode >> $GITHUB_STEP_SUMMARY
+          cat ${{ needs.lint.outputs.lint_output_file }} >> $GITHUB_STEP_SUMMARY
