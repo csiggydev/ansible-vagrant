@@ -25,7 +25,7 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible --force-color || true)  # Handle exit code 2
+          lint_output=$(ansible-lint ./ansible || true)  # Handle exit code 2
           
           echo "Raw lint output: $lint_output"
 
