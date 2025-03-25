@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+
       - name: Run ansible-lint
         id: lint
         uses: ansible/ansible-lint@main
@@ -25,10 +26,10 @@ jobs:
         id: set_output
         run: |
           lint_output=$(ansible-lint ./ansible --force-color || true)
-          echo "$lint_output" >> "$GITHUB_OUTPUT"
+          echo "$lint_result" >> "$GITHUB_OUTPUT"
         continue-on-error: true
-    outputs:
-      lint_result: "${{ steps.set_output.outputs.lint_output }}"
+    # outputs:
+    #   lint_result: "${{ steps.set_output.outputs.lint_output }}"
 
   job-summary:
     needs: lint
@@ -36,4 +37,5 @@ jobs:
     steps:
       - name: Workflow Job Summary
         run: |
+          echo "### Ansible Lint Results" >> $GITHUB_STEP_SUMMARY
           echo "${{ needs.lint.outputs.lint_result }}" >> $GITHUB_STEP_SUMMARY
