@@ -25,7 +25,7 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible --force-color || true)
+          lint_result=$(ansible-lint ./ansible --force-color || true)
           echo "$lint_result" >> "$GITHUB_OUTPUT"
         continue-on-error: true
     # outputs:
