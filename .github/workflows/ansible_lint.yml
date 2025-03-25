@@ -24,8 +24,8 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(cat lint_output.txt || true)
-          echo "lint_result=$lint_output" >> $GITHUB_OUTPUT
+          lint_output=$(ansible-lint ./ansible || true)
+          echo "$lint_output" >> $GITHUB_OUTPUT
 
   action-summary:
     needs: lint
@@ -34,4 +34,4 @@ jobs:
       - name: Workflow Job Summary
         run: |
           echo "### Ansible Lint Results" >> $GITHUB_STEP_SUMMARY
-          echo "$(cat ${{ needs.lint.outputs.lint_result }})" >> $GITHUB_STEP_SUMMARY
+          echo "$(cat ${{ needs.lint.outputs.lint_output }})" >> $GITHUB_STEP_SUMMARY
