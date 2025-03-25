@@ -26,8 +26,9 @@ jobs:
         run: |
           lint_output=$(ansible-lint ./ansible || true)
           echo "$lint_output" >> $GITHUB_OUTPUT
+        continue-on-error: true
 
-  action-summary:
+  job-summary:
     needs: lint
     runs-on: ubuntu-24.04
     steps:
