@@ -41,7 +41,7 @@ jobs:
           echo "### Ansible Lint Results" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
           echo "$lint_output_filtered" | tee -a $GITHUB_STEP_SUMMARY $OUTPUT_FILE
           
-          echo "lint_result=$lint_output_filtered" >> "$GITHUB_OUTPUT"
+          echo "lint_result=$lint_output" >> "$GITHUB_OUTPUT"
         continue-on-error: true
 
   job-summary:
