@@ -27,6 +27,8 @@ jobs:
         run: |
           lint_result=$(ansible-lint ./ansible --force-color || true)
           echo "$lint_result" >> "$GITHUB_OUTPUT"
+
+          echo "Output: $lint_result"
         continue-on-error: true
     # outputs:
     #   lint_result: "${{ steps.set_output.outputs.lint_output }}"
