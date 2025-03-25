@@ -17,4 +17,4 @@ jobs:
           args: ""
           setup_python: "true"
           working_directory: ./ansible
-          requirements_file: ./ansible/requirements.yml
+          requirements_file: requirements.yml
