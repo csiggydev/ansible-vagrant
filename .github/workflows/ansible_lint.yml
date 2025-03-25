@@ -20,9 +20,11 @@ jobs:
           working_directory: ./ansible
           requirements_file: requirements.yml
         continue-on-error: true
+
+      - name: Set Output
+        id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible || true)
-          echo "$lint_output" > lint_output.txt
+          lint_output=$(cat lint_output.txt || true)
           echo "lint_result=$lint_output" >> $GITHUB_OUTPUT
 
   action-summary:
