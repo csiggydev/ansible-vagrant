@@ -24,7 +24,7 @@ jobs:
       - name: Set Output
         id: set_output
         run: |
-          lint_output=$(ansible-lint ./ansible || true)
+          lint_output=$(ansible-lint ./ansible --force-color || true)
           echo "$lint_output" >> $GITHUB_OUTPUT
         continue-on-error: true
 
@@ -34,4 +34,4 @@ jobs:
     steps:
       - name: Workflow Job Summary
         run: |
-          echo "$(cat ${{ needs.lint.outputs.lint_output }})" >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.lint.jobs.lint.steps.set_output.outputs.lint_output }}" >> $GITHUB_STEP_SUMMARY
