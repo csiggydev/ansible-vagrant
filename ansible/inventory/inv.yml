@@ -3,8 +3,10 @@ all:
   hosts:
     vagrant-app1:
       ansible_host: 192.168.100.10
+      ansible_user: vagrant
       ansible_python_interpreter: /usr/bin/python3
-    vagrant-app2:
-      ansible_host: 192.168.100.11
-      ansible_python_interpreter: /usr/bin/python3
+      ansible_ssh_private_key_file: ~/.vagrant.d/insecure_private_key
+    # vagrant-app2:
+    #   ansible_host: 192.168.100.11
+    #   ansible_python_interpreter: /usr/bin/python3
 ...

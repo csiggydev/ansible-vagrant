@@ -1,0 +1,24 @@
+---
+- name: "PLAYBOOK: Install [net-tools] package"
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Play 1: Check if net-tools Package installed"
+      ansible.builtin.apt:
+        name: net-tools
+        state: present
+      register: nettools_install_output
+
+    - name: "Play 3: nettools status Var"
+      ansible.builtin.shell:
+        cmd: |
+          ifconfig
+      register: nettools_status
+      changed_when: "'changed' in nettools_status.stdout"
+
+    - name: "Final Play: net-tools Output"
+      ansible.builtin.debug:
+        msg: "{{ nettools_status.stdout_lines }}"
+...

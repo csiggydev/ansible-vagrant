@@ -1,0 +1,29 @@
+---
+- name: "PLAYBOOK: Install Timesync"
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Play 1: Check if Timesync Package installed"
+      ansible.builtin.apt:
+        name: systemd-timesyncd
+        state: present
+      register: timesync_install_output
+
+    - name: "Play 2: Check if Timesync service enabled"
+      ansible.builtin.service:
+        name: systemd-timesyncd
+        state: started
+
+    - name: "Play 3: Timesync status Var"
+      ansible.builtin.shell:
+        cmd: |
+          systemctl status systemd-timesyncd
+      register: timesync_status
+      changed_when: "'changed' in timesync_status.stdout"
+
+    - name: "Final Play: Timesync CLI Output"
+      ansible.builtin.debug:
+        msg: "{{ timesync_status.stdout_lines }}"
+...
